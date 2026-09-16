@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* BUILDron design tokens — LIGHT PREMIUM                              */
+/*                                                                     */
+/* Token NAMES are unchanged from the previous dark system on purpose: */
+/* ~30 components already reference bg-ink / text-paper / text-mist /  */
+/* border-line, so redefining the VALUES flips the entire site to the  */
+/* light identity without a risky 30-file rewrite.                     */
+/*                                                                     */
+/*   ink       page ground        warm ivory                           */
+/*   graphite  raised surface     bone white                           */
+/*   charcoal  panels / inputs    pure white                           */
+/*   line      hairline rules     warm light gray                      */
+/*   mist      secondary text     neutral gray                         */
+/*   paper     primary text       near-black graphite                  */
+/*   volt      single accent      cobalt                               */
+/*   carbon    the ONE dark scene near-black                           */
+/* ------------------------------------------------------------------ */
+:root {
+  --ink: #f6f4ef;
+  --graphite: #fbf9f5;
+  --charcoal: #ffffff;
+  --line: #e3ded4;
+  --mist: #6c7077;
+  --paper: #14161a;
+  --volt: #1e3aff;
+  --voltsoft: #4b63ff;
+  --carbon: #0b0b0c;
+
+  /* Scroll-driven scene state, written by the WebGL runtime so CSS and
+     GL never disagree about where in the narrative the visitor is. */
+  --scene-progress: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection { background: rgba(30,58,255,.16); color: var(--paper); }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: #d8d2c6; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #c4bcab; }
+
+/* ---------------- Utilities ---------------- */
+
+.text-stroke { -webkit-text-stroke: 1px rgba(20,22,26,.26); color: transparent; }
+
+.section-label { @apply text-[11px] tracking-[0.34em] uppercase text-volt font-medium; }
+
+/* Architectural drafting grid — the ground plane of the BUILDron world. */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(20,22,26,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,22,26,.045) 1px, transparent 1px);
+  background-size: 88px 88px;
+}
+
+.card-border { border: 1px solid var(--line); }
+
+.glow-line { background: linear-gradient(90deg, transparent, rgba(30,58,255,.5), transparent); height: 1px; }
+
+/* Surface for anything that must read as an engineered panel. */
+.panel {
+  background: var(--charcoal);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(20,22,26,.03), 0 12px 32px -20px rgba(20,22,26,.18);
+}
+
+/* The single dark cinematic beat. Used once, deliberately. */
+.scene-dark { background: var(--carbon); color: #f2f2f0; }
+.scene-dark .section-label { color: var(--voltsoft); }
+.scene-dark .text-mist { color: #9aa0a8; }
+.scene-dark .card-border, .scene-dark .panel { border-color: rgba(255,255,255,.12); }
+.scene-dark .panel { background: rgba(255,255,255,.035); box-shadow: none; }
+
+.rule { height: 1px; background: var(--line); }
+
+input, textarea, select {
+  @apply w-full bg-charcoal border border-line rounded-lg px-4 py-3 text-paper placeholder:text-mist/60 outline-none focus:border-volt transition-colors;
+}
+
+/* Visible focus for every interactive element, on light ground. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero line reveal — CSS only, deliberately.                          */
+/*                                                                     */
+/* A JS-driven reveal ships the <h1> to the browser with an inline     */
+/* translateY(110%) inside an overflow-hidden parent, which means the  */
+/* headline is invisible until hydration finishes — and stays invisible*/
+/* forever if the JS bundle fails. The most important text on the site */
+/* should not depend on a script. CSS animates from the same start     */
+/* state but always resolves, and reduced-motion skips it entirely.    */
+/* ------------------------------------------------------------------ */
+.line-mask { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+
+.line-rise {
+  display: block;
+  transform: translateY(110%);
+  animation: lineRise .95s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+@keyframes lineRise { to { transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .line-rise { transform: none; animation: none; }
+}
