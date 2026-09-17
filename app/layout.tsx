@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SITE, SITE_URL, abs } from "@/data/site";
 import { graph, organizationSchema, websiteSchema } from "@/lib/seo";
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Analytics />
         <VercelAnalytics />
+        <SpeedInsights />
       </body>
     </html>
   );
